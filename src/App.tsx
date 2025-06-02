@@ -24,7 +24,7 @@ function App() {
     "Midlife crisis starts in 3… 2…",
     "Open it and reveal your final form (disappointment)",
     "Noah raw-dogs ketchup packets",
-    "Matt eats a bowl of Cheetos with cheese",
+    "Matthew eats a bowl of Cheetos with cheese",
     "Why?",
     "Disney adults",
     "They mark Hispanic on on forms but immediately ask where the mayo is",
@@ -98,7 +98,8 @@ function App() {
   const handleClick = () => {
     const gift = giftRef.current;
     const middleFinger = middleFingerRef.current;
-    if (!gift || !middleFinger) {
+    const phrase = phraseRef.current;
+    if (!gift || !middleFinger || !phrase) {
       // alert('no gift!')
       return;
     }
@@ -109,6 +110,7 @@ function App() {
       moveGift();
     } else {
       gift.style.display = 'none';
+      phrase.style.display = 'none';
       middleFinger.style.visibility = 'visible';
       triggerConfetti();
     }
@@ -122,7 +124,7 @@ function App() {
       <img id="gift"
         ref={giftRef} src={giftImage}
         onClick={handleClick}
-        className='w-32 h-32 absolute animate-bounce invisble' />
+        className='w-32 h-32 absolute animate-bounce invisble transition-all duration-300 ease-in-out scale-100' />
       <img id="middle-finger" ref={middleFingerRef} src={middleFingerImage} className='w-32 invisible' />
     </>
   )
