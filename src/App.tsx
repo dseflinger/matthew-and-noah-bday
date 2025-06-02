@@ -8,114 +8,122 @@ import './App.css'
 import confetti from 'canvas-confetti'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const phraseRef = useRef<HTMLDivElement>(null)
   const giftRef = useRef<HTMLImageElement>(null)
   const middleFingerRef = useRef<HTMLImageElement>(null)
-  let clickCount = 0;
+  const [clickCount, setClickCount] = useState(0)
+
+  const phrases = [
+    "Open your gift for a special suprise!",
+    "Definitely not best man material",
+    "Bottom of leaderboard",
+    "Peaked in High School",
+    "One twin is definitely uglier",
+    "Your mom definitely has a favorite",
+    "What happened?",
+    "Midlife crisis starts in 3… 2…",
+    "Open it and reveal your final form (disappointment)",
+    "Noah raw-dogs ketchup packets",
+    "Matt eats a bowl of Cheetos with cheese",
+    "Why?",
+    "Disney adults",
+    "They mark Hispanic on on forms but immediately ask where the mayo is",
+    "You're closer to 40 now than to 20",
+    "They were supposed to be triplets, but one clearly ate the third"
+  ]
 
   useEffect(() => {
+    const phrase = phraseRef.current;
 
-    // todo figure out why its called twice
-    var gift = giftRef.current;
-    var middleFinger = middleFingerRef.current;
-    if (!gift) {
-      alert("no gift element");
-      return;
+    const gift = giftRef.current;
+
+    if (phrase && gift) {
+      const phraseRect = phrase.getBoundingClientRect();
+
+      const top = phraseRect.bottom + 32;
+      const left = phraseRect.left + (phraseRect.width / 2) - (gift.offsetWidth / 2);
+
+      gift.style.position = 'absolute';
+      gift.style.top = `${top}px`;
+      gift.style.left = `${left}px`;
+      gift.style.visibility = 'visible';
     }
-
-    // (function () {
-    //   const runConfetti = document.querySelector('#hs-run-on-click-run-confetti');
-    //   if (!runConfetti) return;
-    //   runConfetti.addEventListener('click', () => {
-    //     confetti({
-    //       particleCount: 100,
-    //       spread: 70,
-    //       origin: {
-    //         y: 0.6
-    //       }
-    //     });
-    //   });
-    // })();
-
-    const triggerConfetti = () => {
-      if (!middleFinger) return;
-
-      const rect = middleFinger.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      confetti({
-        origin: {
-          x: centerX / window.innerWidth,
-          y: centerY / window.innerHeight,
-        },
-      });
-
-    }
-
-    const moveGift = () => {
-      if (!gift) return;
-      console.log("gift clicked!");
-      const giftWidth = gift.offsetWidth
-      const giftHeight = gift.offsetHeight
-      const maxX = window.innerWidth - giftWidth;
-      const maxY = window.innerHeight - giftHeight;
-      const randomX = Math.random() * maxX;
-      const randomY = Math.random() * maxY;
-      gift.style.left = `${randomX}px`;
-
-      gift.style.top = `${randomY}px`;
-
-      // giftElement.style.setProperty("--rando", `${Math.floor(Math.random() * 20) + 1}px`); // inject the CSS with JavaScript
-    }
-    const handleClick = () => {
-      if (!gift || !middleFinger) return;
-      clickCount++;
-      if (clickCount < 5) {
-        moveGift();
-      } else {
-        // alert("30 times!");
-        gift.style.display = 'none';
-        middleFinger.style.visibility = 'visible';
-        triggerConfetti();
-      }
-    }
-    gift.addEventListener('click', handleClick);
-
-    return () => {
-      if (!gift) return;
-      gift.removeEventListener('click', handleClick);
-    };
 
   }, [])
 
+  const triggerConfetti = () => {
+    var middleFinger = middleFingerRef.current;
+    if (!middleFinger) return;
+
+    const rect = middleFinger.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    confetti({
+      origin: {
+        x: centerX / window.innerWidth,
+        y: centerY / window.innerHeight,
+      },
+      particleCount: 200,
+      spread: 70
+    });
+
+  }
+
+  const moveGift = () => {
+    var gift = giftRef.current;
+    var phrase = phraseRef.current;
+    if (!gift || !phrase) return;
+
+    const phraseRect = phrase.getBoundingClientRect();
+    const giftWidth = gift.offsetWidth;
+    const giftHeight = gift.offsetHeight;
+    const maxX = window.innerWidth - giftWidth;
+    const maxY = window.innerHeight - giftHeight;
+    let randomX, randomY;
+    do {
+      randomX = Math.random() * maxX;
+      randomY = Math.random() * maxY;
+    } while (
+      phrase &&
+      randomX + giftWidth > phraseRect.left &&
+      randomX < phraseRect.right &&
+      randomY + giftHeight > phraseRect.top &&
+      randomY < phraseRect.bottom
+    );
+    gift.style.left = `${randomX}px`;
+
+    gift.style.top = `${randomY}px`;
+  }
+  const handleClick = () => {
+    const gift = giftRef.current;
+    const middleFinger = middleFingerRef.current;
+    if (!gift || !middleFinger) {
+      // alert('no gift!')
+      return;
+    }
+    setClickCount(prev => prev + 1);
+    console.log(`clickcount ${clickCount}`)
+    console.log(`clickcount < 5 ${clickCount < 30}`)
+    if (clickCount < 30) {
+      moveGift();
+    } else {
+      gift.style.display = 'none';
+      middleFinger.style.visibility = 'visible';
+      triggerConfetti();
+    }
+  }
+
   return (
     <>
-      {/* <img id="gift" ref={giftRef} src={giftImage} className='w-32 h-32 absolute bg-white animate-bounce' /> */}
-      <img id="hs-run-on-click-run-confetti" ref={giftRef} src={giftImage} className='w-32 h-32 absolute animate-bounce' />
-      <img id="hs-run-on-click-run-confetti" ref={middleFingerRef} src={middleFingerImage} className='w-32 invisible' />
-      {/* <button id="hs-run-on-click-run-confetti" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" type="button">Run Confetti</button> */}
-      {/* <div id="gift" ref={giftRef} className='bg-red-400 w-32 h-32 absolute'></div> */}
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div ref={phraseRef} className='flex flex-col items-center'>
+        <span className='text-2xl md:text-3xl lg:text-4xl'>{phrases[clickCount]}</span>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p className='bg-red-300'>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
+      <img id="gift"
+        ref={giftRef} src={giftImage}
+        onClick={handleClick}
+        className='w-32 h-32 absolute animate-bounce invisble' />
+      <img id="middle-finger" ref={middleFingerRef} src={middleFingerImage} className='w-32 invisible' />
     </>
   )
 }
