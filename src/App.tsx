@@ -1,57 +1,101 @@
 import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
+// import giftImage from './assets/undraw_happy-birthday_lmk0.svg'
+import giftImage from './assets/present.png'
+import middleFingerImage from './assets/colbert_middle.gif'
 import viteLogo from '/vite.svg'
 import './App.css'
+import confetti from 'canvas-confetti'
 
 function App() {
   const [count, setCount] = useState(0)
-  const giftRef = useRef<HTMLDivElement>(null)
+  const giftRef = useRef<HTMLImageElement>(null)
+  const middleFingerRef = useRef<HTMLImageElement>(null)
   let clickCount = 0;
 
-  // moveGift();
   useEffect(() => {
+
     // todo figure out why its called twice
     var gift = giftRef.current;
+    var middleFinger = middleFingerRef.current;
     if (!gift) {
       alert("no gift element");
       return;
     }
+
+    // (function () {
+    //   const runConfetti = document.querySelector('#hs-run-on-click-run-confetti');
+    //   if (!runConfetti) return;
+    //   runConfetti.addEventListener('click', () => {
+    //     confetti({
+    //       particleCount: 100,
+    //       spread: 70,
+    //       origin: {
+    //         y: 0.6
+    //       }
+    //     });
+    //   });
+    // })();
+
+    const triggerConfetti = () => {
+      if (!middleFinger) return;
+
+      const rect = middleFinger.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      confetti({
+        origin: {
+          x: centerX / window.innerWidth,
+          y: centerY / window.innerHeight,
+        },
+      });
+
+    }
+
     const moveGift = () => {
       if (!gift) return;
       console.log("gift clicked!");
       const giftWidth = gift.offsetWidth
       const giftHeight = gift.offsetHeight
-      // alert("clicked gift")
       const maxX = window.innerWidth - giftWidth;
       const maxY = window.innerHeight - giftHeight;
       const randomX = Math.random() * maxX;
       const randomY = Math.random() * maxY;
-      console.log(`gift left before ${gift.style.left}`);
       gift.style.left = `${randomX}px`;
-      console.log(`gift left after ${gift.style.left}`);
 
       gift.style.top = `${randomY}px`;
+
       // giftElement.style.setProperty("--rando", `${Math.floor(Math.random() * 20) + 1}px`); // inject the CSS with JavaScript
     }
-    gift.addEventListener('click', () => {
+    const handleClick = () => {
+      if (!gift || !middleFinger) return;
       clickCount++;
-      if (clickCount < 30) {
+      if (clickCount < 5) {
         moveGift();
       } else {
-        alert("30 times!");
-        // gift.style.display = 'none';
-        // middleFinger.style.display = 'block';
+        // alert("30 times!");
+        gift.style.display = 'none';
+        middleFinger.style.visibility = 'visible';
+        triggerConfetti();
       }
-    });
-    // moveGift()
+    }
+    gift.addEventListener('click', handleClick);
+
+    return () => {
+      if (!gift) return;
+      gift.removeEventListener('click', handleClick);
+    };
 
   }, [])
 
   return (
     <>
-      {/* <img id="gift" /> */}
-      <div id="gift" ref={giftRef} className='bg-red-400 w-32 h-32 absolute'></div>
-      <div>test</div>
+      {/* <img id="gift" ref={giftRef} src={giftImage} className='w-32 h-32 absolute bg-white animate-bounce' /> */}
+      <img id="hs-run-on-click-run-confetti" ref={giftRef} src={giftImage} className='w-32 h-32 absolute animate-bounce' />
+      <img id="hs-run-on-click-run-confetti" ref={middleFingerRef} src={middleFingerImage} className='w-32 invisible' />
+      {/* <button id="hs-run-on-click-run-confetti" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" type="button">Run Confetti</button> */}
+      {/* <div id="gift" ref={giftRef} className='bg-red-400 w-32 h-32 absolute'></div> */}
       {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
