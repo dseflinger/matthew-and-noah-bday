@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-// import giftImage from './assets/undraw_happy-birthday_lmk0.svg'
 import giftImage from './assets/present.png'
 import middleFingerImage from './assets/colbert_middle.gif'
-import viteLogo from '/vite.svg'
+import chosePoorlyImage from './assets/youchosepoorly.jpg'
 import './App.css'
 import confetti from 'canvas-confetti'
 
@@ -13,6 +11,7 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const [randomIndex, setRandomIndex] = useState<number | null>(null);
+  const [decoysClicked, setDecoysClicked] = useState(new Set());
 
   const phrases = [
     "Open your gift for a special suprise!",
@@ -27,7 +26,7 @@ function App() {
     "Open it and reveal your final form (disappointment)",
     "Noah raw-dogs ketchup packets",
     "Matthew eats a bowl of Cheetos with cheese",
-    "WHICH ONE IS IT. CHOOSE WISELY", // todo maybe add YOU CHOSE POORLY
+    "WHICH ONE IS IT??? CHOOSE WISELY",
     "Why?",
     "Disney adults",
     "They mark Hispanic on on forms but immediately ask where the mayo is",
@@ -36,7 +35,7 @@ function App() {
   ]
 
   useEffect(() => {
-    setRandomIndex(Math.floor(Math.random() * 4));  
+    setRandomIndex(Math.floor(Math.random() * 4));
 
     const phrase = phraseRef.current;
 
@@ -106,7 +105,6 @@ function App() {
     const middleFinger = middleFingerRef.current;
     const phrase = phraseRef.current;
     if (!gift || !middleFinger || !phrase) {
-      // alert('no gift!')
       return;
     }
     setClickCount(prev => prev + 1);
@@ -119,6 +117,14 @@ function App() {
       middleFinger.style.visibility = 'visible';
       triggerConfetti();
     }
+  }
+
+  const handleDecoy = (index: number) => {
+    setDecoysClicked(prev => {
+      const newSet = new Set(prev);
+      newSet.add(index);
+      return newSet;
+    });
   }
 
   return (
@@ -134,7 +140,10 @@ function App() {
             className={`absolute animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
         </>
       )}
-      <img id="middle-finger" ref={middleFingerRef} src={middleFingerImage} className='w-32 invisible' />
+      <div ref={middleFingerRef} className='flex flex-col items-center invisible'>
+        <span className='text-2xl md:text-3xl lg:text-4xl font-bold mb-8'>Happy 30th Birthday Fuckers!</span>
+        <img id="middle-finger" src={middleFingerImage} className='w-64' />
+      </div>
       {clickCount === 12 && (
         <>
           <div className='flex space-between flex-wrap justify-center'>
@@ -142,9 +151,9 @@ function App() {
               <img
                 key={i}
                 ref={giftRef}
-                src={giftImage}
+                src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
                 className="animate-bounce invisble transition-all duration-300 ease-in-out scale-100 w-32 h-32"
-                onClick={i === randomIndex ? handleClick : () => { }}
+                onClick={i === randomIndex ? handleClick : () => handleDecoy(i)}
               />
             ))}
           </div>
