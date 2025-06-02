@@ -2,8 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import giftImage from './assets/present.png'
 import middleFingerImage from './assets/colbert_middle.gif'
 import chosePoorlyImage from './assets/youchosepoorly.jpg'
+import younglingImage from './assets/youngling.webp'
+import lightsaberImage from './assets/bluelightsaber.jpg'
 import './App.css'
 import confetti from 'canvas-confetti'
+import { DndContext } from '@dnd-kit/core'
+import Draggable from './Draggable'
+import Droppable from './Droppable'
 
 function App() {
   const phraseRef = useRef<HTMLDivElement>(null)
@@ -13,7 +18,9 @@ function App() {
   const [randomIndex, setRandomIndex] = useState<number | null>(null);
   const [randomIndex20, setRandomIndex20] = useState<number | null>(null);
   const [decoysClicked, setDecoysClicked] = useState(new Set());
+  const [parent, setParent] = useState(null);
 
+  // todo maybe add isSpecial or enum type
   const phrases = [
     "Open your gift for a special suprise!",
     "Definitely not best man material",
@@ -33,7 +40,8 @@ function App() {
     "Disney adults",
     "They mark Hispanic on on forms but immediately ask where the mayo is",
     "You're closer to 40 now than to 20",
-    "They were supposed to be triplets, but one clearly ate the third"
+    "They were supposed to be triplets, but one clearly ate the third",
+    "KILL THE YOUNGLING, DO IT, DO IT NOW"
   ]
 
   useEffect(() => {
@@ -95,7 +103,7 @@ function App() {
       return;
     }
     setClickCount(prev => prev + 1);
-    setDecoysClicked(new Set  ())
+    setDecoysClicked(new Set())
     console.log(`clickcount ${clickCount}`)
     if (clickCount < 30) {
       moveGift();
@@ -115,6 +123,11 @@ function App() {
     });
   }
 
+
+  function handleDragEnd({ over }: any) {
+    setParent(over ? over.id : null);
+  }
+
   return (
     <div>
       <div ref={phraseRef} className='flex flex-col items-center'>
@@ -126,7 +139,7 @@ function App() {
             id="gift"
             ref={giftRef} src={giftImage}
             onClick={handleClick}
-            className={`animate-bounce invisble transition-all duration-300 ease-in-out scale-100 absolute ${clickCount == 0 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+            className={`animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
         </div>
       )}
       <div ref={middleFingerRef} className='flex flex-col items-center hidden'>
@@ -159,7 +172,26 @@ function App() {
           ))}
         </div>
       )}
-
+      {clickCount === 3 && (
+        <div>
+          <DndContext onDragEnd={handleDragEnd}>
+            {!parent ? (
+              <Draggable id="draggable-item">
+                <img src={lightsaberImage} alt="Lightsaber" className="w-16 h-16" />
+              </Draggable>
+            ) : null}
+            <Droppable id="drop-zone">
+              {parent === 'drop-zone' ? (
+                <img src={younglingImage} alt="Youngling" className="w-24 h-24" />
+              ) : (
+                <div className="w-24 h-24 border-2 border-dashed border-gray-400 flex items-center justify-center text-sm">
+                  Drop here
+                </div>
+              )}
+            </Droppable>
+          </DndContext>
+        </div>
+      )}
     </div>
   )
 }
