@@ -11,6 +11,7 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const [randomIndex, setRandomIndex] = useState<number | null>(null);
+  const [randomIndex20, setRandomIndex20] = useState<number | null>(null);
   const [decoysClicked, setDecoysClicked] = useState(new Set());
 
   const phrases = [
@@ -27,6 +28,7 @@ function App() {
     "Noah raw-dogs ketchup packets",
     "Matthew eats a bowl of Cheetos with cheese",
     "WHICH ONE IS IT??? CHOOSE WISELY",
+    "HOW ABOUT NOW???",
     "Why?",
     "Disney adults",
     "They mark Hispanic on on forms but immediately ask where the mayo is",
@@ -36,22 +38,7 @@ function App() {
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * 4));
-
-    const phrase = phraseRef.current;
-
-    const gift = giftRef.current;
-
-    if (phrase && gift) {
-      const phraseRect = phrase.getBoundingClientRect();
-
-      const top = phraseRect.bottom + 32;
-      const left = phraseRect.left + (phraseRect.width / 2) - (gift.offsetWidth / 2);
-
-      gift.style.position = 'absolute';
-      gift.style.top = `${top}px`;
-      gift.style.left = `${left}px`;
-      gift.style.visibility = 'visible';
-    }
+    setRandomIndex20(Math.floor(Math.random() * 20));
 
   }, [])
 
@@ -108,13 +95,14 @@ function App() {
       return;
     }
     setClickCount(prev => prev + 1);
+    setDecoysClicked(new Set  ())
     console.log(`clickcount ${clickCount}`)
     if (clickCount < 30) {
       moveGift();
     } else {
       gift.style.display = 'none';
       phrase.style.display = 'none';
-      middleFinger.style.visibility = 'visible';
+      middleFinger.classList.remove('hidden');
       triggerConfetti();
     }
   }
@@ -128,39 +116,51 @@ function App() {
   }
 
   return (
-    <>
+    <div>
       <div ref={phraseRef} className='flex flex-col items-center'>
         <span className='text-2xl md:text-3xl lg:text-4xl'>{phrases[clickCount]}</span>
       </div>
-      {clickCount !== 12 && (
-        <>
-          <img id="gift"
+      {clickCount !== 12 && clickCount != 13 && (
+        <div className='flex space-between flex-wrap justify-center mt-16'>
+          <img
+            id="gift"
             ref={giftRef} src={giftImage}
             onClick={handleClick}
-            className={`absolute animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
-        </>
+            className={`animate-bounce invisble transition-all duration-300 ease-in-out scale-100 absolute ${clickCount == 0 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+        </div>
       )}
-      <div ref={middleFingerRef} className='flex flex-col items-center invisible'>
+      <div ref={middleFingerRef} className='flex flex-col items-center hidden'>
         <span className='text-2xl md:text-3xl lg:text-4xl font-bold mb-8'>Happy 30th Birthday Fuckers!</span>
         <img id="middle-finger" src={middleFingerImage} className='w-64' />
       </div>
       {clickCount === 12 && (
-        <>
-          <div className='flex space-between flex-wrap justify-center'>
-            {[0, 1, 2, 3].map((_, i) => (
-              <img
-                key={i}
-                ref={giftRef}
-                src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
-                className="animate-bounce invisble transition-all duration-300 ease-in-out scale-100 w-32 h-32"
-                onClick={i === randomIndex ? handleClick : () => handleDecoy(i)}
-              />
-            ))}
-          </div>
-        </>
+        <div className='flex space-between flex-wrap justify-center  mt-16'>
+          {[0, 1, 2, 3].map((_, i) => (
+            <img
+              key={i}
+              ref={giftRef}
+              src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
+              className="animate-bounce transition-all duration-300 ease-in-out scale-100 w-32 h-32"
+              onClick={i === randomIndex ? handleClick : () => handleDecoy(i)}
+            />
+          ))}
+        </div>
+      )}
+      {clickCount === 13 && (
+        <div className='flex space-between flex-wrap justify-center  mt-16'>
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((_, i) => (
+            <img
+              key={i}
+              ref={giftRef}
+              src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
+              className="animate-bounce transition-all duration-300 ease-in-out scale-100 w-16 h-16"
+              onClick={i === randomIndex20 ? handleClick : () => handleDecoy(i)}
+            />
+          ))}
+        </div>
       )}
 
-    </>
+    </div>
   )
 }
 
