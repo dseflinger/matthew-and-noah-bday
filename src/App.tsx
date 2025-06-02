@@ -12,6 +12,7 @@ function App() {
   const giftRef = useRef<HTMLImageElement>(null)
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
+  const [randomIndex, setRandomIndex] = useState<number | null>(null);
 
   const phrases = [
     "Open your gift for a special suprise!",
@@ -20,11 +21,13 @@ function App() {
     "Peaked in High School",
     "One twin is definitely uglier",
     "Your mom definitely has a favorite",
+    "Its a little birthday present, get it?",
     "What happened?",
     "Midlife crisis starts in 3… 2…",
     "Open it and reveal your final form (disappointment)",
     "Noah raw-dogs ketchup packets",
     "Matthew eats a bowl of Cheetos with cheese",
+    "WHICH ONE IS IT. CHOOSE WISELY", // todo maybe add YOU CHOSE POORLY
     "Why?",
     "Disney adults",
     "They mark Hispanic on on forms but immediately ask where the mayo is",
@@ -33,6 +36,8 @@ function App() {
   ]
 
   useEffect(() => {
+    setRandomIndex(Math.floor(Math.random() * 4));  
+
     const phrase = phraseRef.current;
 
     const gift = giftRef.current;
@@ -96,6 +101,7 @@ function App() {
     gift.style.top = `${randomY}px`;
   }
   const handleClick = () => {
+    console.log('handle click');
     const gift = giftRef.current;
     const middleFinger = middleFingerRef.current;
     const phrase = phraseRef.current;
@@ -105,7 +111,6 @@ function App() {
     }
     setClickCount(prev => prev + 1);
     console.log(`clickcount ${clickCount}`)
-    console.log(`clickcount < 5 ${clickCount < 30}`)
     if (clickCount < 30) {
       moveGift();
     } else {
@@ -121,11 +126,31 @@ function App() {
       <div ref={phraseRef} className='flex flex-col items-center'>
         <span className='text-2xl md:text-3xl lg:text-4xl'>{phrases[clickCount]}</span>
       </div>
-      <img id="gift"
-        ref={giftRef} src={giftImage}
-        onClick={handleClick}
-        className='w-32 h-32 absolute animate-bounce invisble transition-all duration-300 ease-in-out scale-100' />
+      {clickCount !== 12 && (
+        <>
+          <img id="gift"
+            ref={giftRef} src={giftImage}
+            onClick={handleClick}
+            className={`absolute animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+        </>
+      )}
       <img id="middle-finger" ref={middleFingerRef} src={middleFingerImage} className='w-32 invisible' />
+      {clickCount === 12 && (
+        <>
+          <div className='flex space-between flex-wrap justify-center'>
+            {[0, 1, 2, 3].map((_, i) => (
+              <img
+                key={i}
+                ref={giftRef}
+                src={giftImage}
+                className="animate-bounce invisble transition-all duration-300 ease-in-out scale-100 w-32 h-32"
+                onClick={i === randomIndex ? handleClick : () => { }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
     </>
   )
 }
