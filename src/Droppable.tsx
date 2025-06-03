@@ -7,7 +7,7 @@ function Droppable({ id, children }: { id: string, children: React.ReactNode }) 
     });
 
     return (
-        <div ref={setNodeRef} className="p-4">
+        <div ref={setNodeRef}>
             {children}
         </div>
     );

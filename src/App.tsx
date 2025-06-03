@@ -3,12 +3,14 @@ import giftImage from './assets/present.png'
 import middleFingerImage from './assets/colbert_middle.gif'
 import chosePoorlyImage from './assets/youchosepoorly.jpg'
 import younglingImage from './assets/youngling.webp'
-import lightsaberImage from './assets/bluelightsaber.jpg'
+import lightsaberImage from './assets/lightsaber.png'
 import './App.css'
 import confetti from 'canvas-confetti'
 import { DndContext } from '@dnd-kit/core'
 import Draggable from './Draggable'
 import Droppable from './Droppable'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 
 export enum PhraseType {
   default,
@@ -27,6 +29,7 @@ export interface MultiGiftPhrase extends BasePhrase {
 }
 
 type Phrase = BasePhrase | MultiGiftPhrase;
+const maxClickCount = 30;
 
 function App() {
   const phraseRef = useRef<HTMLDivElement>(null)
@@ -34,7 +37,6 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const [randomIndex, setRandomIndex] = useState<number | null>(null);
-  const [randomIndex20, setRandomIndex20] = useState<number | null>(null);
   const [decoysClicked, setDecoysClicked] = useState(new Set());
   const [parent, setParent] = useState(null);
 
@@ -58,19 +60,43 @@ function App() {
     { text: "They mark Hispanic on on forms but immediately ask where the mayo is" },
     { text: "You're closer to 40 now than to 20" },
     { text: "They were supposed to be triplets, but one clearly ate the third" },
-    { text: "KILL THE YOUNGLING, DO IT, DO IT NOW", type: PhraseType.lightsaber },
     { text: "one more just to test" },
+    { text: "KILL THE YOUNGLING. DO IT. DO IT NOW.", type: PhraseType.lightsaber },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
+    { text: "TODO" },
   ]
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * 4));
-    setRandomIndex20(Math.floor(Math.random() * 20));
 
-  }, [])
+    if (clickCount < maxClickCount) {
+      moveGift();
+
+      var currentPhrase = phrases[clickCount];
+      if (currentPhrase.type === PhraseType.multibox) {
+        const boxcount = (currentPhrase as MultiGiftPhrase).boxcount;
+        setRandomIndex(Math.floor(Math.random() * boxcount));
+      }
+    }
+    else {
+      triggerConfetti();
+    }
+  }, [clickCount])
 
   const triggerConfetti = () => {
+    console.log("before confetti")
     var middleFinger = middleFingerRef.current;
     if (!middleFinger) return;
+    middleFinger.classList.remove('hidden');
+    console.log("after confetti")
 
     const rect = middleFinger.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -113,25 +139,8 @@ function App() {
     gift.style.top = `${randomY}px`;
   }
   const handleClick = () => {
-    console.log('handle click');
-    const gift = giftRef.current;
-    const middleFinger = middleFingerRef.current;
-    const phrase = phraseRef.current;
-    if (!middleFinger || !phrase) {
-      return;
-    }
     setDecoysClicked(new Set());
     setClickCount(prev => prev + 1);
-    console.log(`clickcount ${clickCount}`)
-    if (clickCount < 30) {
-      moveGift();
-    } else {
-      if (gift)
-        gift.style.display = 'none';
-      phrase.style.display = 'none';
-      middleFinger.classList.remove('hidden');
-      triggerConfetti();
-    }
   }
 
   function getGiftSizeClass(boxCount: number) {
@@ -158,63 +167,81 @@ function App() {
     }
   }
 
+  const renderPhraseContent = () => {
+    if (clickCount < maxClickCount) {
+      return (
+        <div ref={phraseRef} className='flex flex-col items-center'>
+          <span className='text-2xl md:text-3xl lg:text-4xl'>{phrases[clickCount].text}</span>
+        </div>
+      );
+    }
+  }
+
+  const renderMiddleFingerContent = () => {
+    if (clickCount == maxClickCount) {
+      return (
+        <div ref={middleFingerRef} className='flex flex-col items-center'>
+          <span className='text-2xl md:text-3xl lg:text-4xl font-bold mb-8'>Happy 30th Birthday Fuckers!</span>
+          <img id="middle-finger" src={middleFingerImage} className='w-64' />
+        </div>
+      );
+    }
+  }
+
   const renderContent = () => {
-    switch (phrases[clickCount].type) {
-      case PhraseType.multibox:
-        var phrase = phrases[clickCount] as MultiGiftPhrase;
-        var boxcount = phrase.boxcount;
-        const sizeClass = getGiftSizeClass(boxcount);
-        // todo fix randomIndex (its always been 0 and 3)
-        return (
-          <div className='flex space-between flex-wrap justify-center  mt-16'>
-            {Array.from({ length: boxcount }, (_, index) => index).map((_, i) => (
-              <img
-                key={`${clickCount}-${i}`}
-                src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
-                className={`animate-bounce transition-all scale-100 ${sizeClass}`}
-                onClick={i === randomIndex ? handleClick : () => handleDecoy(i)}
-              />
-            ))}
-          </div>
-        );
-      case PhraseType.lightsaber:
-        return (
-          <DndContext onDragEnd={handleDragEnd}>
-            <div>
-              {!parent ? (
-                <Draggable id="draggable-item">
-                  <img src={lightsaberImage} alt="Lightsaber" className="w-32" />
-                </Draggable>
-              ) : null}
-              <Droppable id="drop-zone">
-                <img src={younglingImage} alt="Youngling" className="w-32" />
-              </Droppable>
+    if (clickCount < maxClickCount) {
+
+      switch (phrases[clickCount].type) {
+        case PhraseType.multibox:
+          var phrase = phrases[clickCount] as MultiGiftPhrase;
+          var boxcount = phrase.boxcount;
+          const sizeClass = getGiftSizeClass(boxcount);
+          return (
+            <div className='flex space-between flex-wrap justify-center mt-16'>
+              {Array.from({ length: boxcount }, (_, index) => index).map((_, i) => (
+                <img
+                  key={`${clickCount}-${i}`}
+                  src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
+                  className={`animate-bounce transition-all scale-100 ${sizeClass}`}
+                  onClick={i === randomIndex ? handleClick : () => handleDecoy(i)}
+                />
+              ))}
             </div>
-          </DndContext>
-        );
-      default:
-        return (
-          <div className='flex space-between flex-wrap justify-center mt-16'>
-            <img
-              id="gift"
-              ref={giftRef} src={giftImage}
-              onClick={handleClick}
-              className={`animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
-          </div>
-        );
+          );
+        case PhraseType.lightsaber:
+          return (
+            <DndContext onDragEnd={handleDragEnd}>
+              <div className='flex space-between flex-col gap-8 justify-center items-center mt-16'>
+                {!parent ? (
+                  <Draggable id="draggable-item">
+                    <img src={lightsaberImage} alt="Lightsaber" className="w-48" />
+                  </Draggable>
+                ) : null}
+                <FontAwesomeIcon icon={faArrowDown} size="2x" />
+                <Droppable id="drop-zone">
+                  <img src={younglingImage} alt="Youngling" className="w-64" />
+                </Droppable>
+              </div>
+            </DndContext>
+          );
+        default:
+          return (
+            <div className='flex space-between flex-wrap justify-center mt-16'>
+              <img
+                id="gift"
+                ref={giftRef} src={giftImage}
+                onClick={handleClick}
+                className={`animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+            </div>
+          );
+      }
     }
   };
 
   return (
     <div>
-      <div ref={phraseRef} className='flex flex-col items-center'>
-        <span className='text-2xl md:text-3xl lg:text-4xl'>{phrases[clickCount].text}</span>
-      </div>
-
-      <div ref={middleFingerRef} className='flex flex-col items-center hidden'>
-        <span className='text-2xl md:text-3xl lg:text-4xl font-bold mb-8'>Happy 30th Birthday Fuckers!</span>
-        <img id="middle-finger" src={middleFingerImage} className='w-64' />
-      </div>
+      {renderPhraseContent()}
+      {renderMiddleFingerContent()}
       {renderContent()}
     </div>
   )
