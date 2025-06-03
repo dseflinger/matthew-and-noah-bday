@@ -11,24 +11,9 @@ import Draggable from './Draggable'
 import Droppable from './Droppable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
 
-export enum PhraseType {
-  default,
-  multibox,
-  lightsaber
-}
 
-export interface BasePhrase {
-  text: string;
-  type?: PhraseType;
-}
-
-export interface MultiGiftPhrase extends BasePhrase {
-  boxcount: number;
-  type: PhraseType.multibox;
-}
-
-type Phrase = BasePhrase | MultiGiftPhrase;
 const maxClickCount = 30;
 
 function App() {
@@ -39,40 +24,6 @@ function App() {
   const [randomIndex, setRandomIndex] = useState<number | null>(null);
   const [decoysClicked, setDecoysClicked] = useState(new Set());
   const [parent, setParent] = useState(null);
-
-  const phrases: Phrase[] = [
-    { text: "Open your gift for a special suprise!" },
-    { text: "Definitely not best man material" },
-    { text: "Bottom of leaderboard" },
-    { text: "Peaked in High School" },
-    { text: "One twin is definitely uglier" },
-    { text: "Your mom definitely has a favorite" },
-    { text: "Its a little birthday present, get it?" },
-    { text: "What happened?" },
-    { text: "Midlife crisis starts in 3… 2…" },
-    { text: "Open it and reveal your final form (disappointment)" },
-    { text: "Noah raw-dogs ketchup packets" },
-    { text: "Matthew eats a bowl of Cheetos with cheese" },
-    { text: "WHICH ONE IS IT??? CHOOSE WISELY", type: PhraseType.multibox, boxcount: 4 },
-    { text: "HOW ABOUT NOW???", type: PhraseType.multibox, boxcount: 20 },
-    { text: "Why?" },
-    { text: "Disney adults" },
-    { text: "They mark Hispanic on on forms but immediately ask where the mayo is" },
-    { text: "You're closer to 40 now than to 20" },
-    { text: "They were supposed to be triplets, but one clearly ate the third" },
-    { text: "one more just to test" },
-    { text: "KILL THE YOUNGLING. DO IT. DO IT NOW.", type: PhraseType.lightsaber },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-  ]
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * 4));
@@ -124,6 +75,10 @@ function App() {
     const maxX = window.innerWidth - giftWidth;
     const maxY = window.innerHeight - giftHeight;
     let randomX, randomY;
+    console.log(`phraseRect.left: ${phraseRect.left}`);
+    console.log(`phraseRect.top: ${phraseRect.top}`);
+    console.log(`maxX: ${maxX}`);
+    console.log(`maxY: ${maxY}`);
     do {
       randomX = Math.random() * maxX;
       randomY = Math.random() * maxY;
@@ -138,6 +93,7 @@ function App() {
 
     gift.style.top = `${randomY}px`;
   }
+
   const handleClick = () => {
     setDecoysClicked(new Set());
     setClickCount(prev => prev + 1);
@@ -226,7 +182,7 @@ function App() {
           );
         default:
           return (
-            <div className='flex space-between flex-wrap justify-center mt-16'>
+            <div className={`flex space-between flex-wrap justify-center ${clickCount == 0 || clickCount == 6 ? 'mt-16' : ''}`} >
               <img
                 id="gift"
                 ref={giftRef} src={giftImage}
