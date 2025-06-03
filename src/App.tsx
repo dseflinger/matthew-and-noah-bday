@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import giftImage from './assets/present.png'
 import middleFingerImage from './assets/colbert_middle.gif'
-import chosePoorlyImage from './assets/youchosepoorly.jpg'
 import younglingImage from './assets/youngling.webp'
 import lightsaberImage from './assets/lightsaber.png'
 import './App.css'
@@ -12,6 +11,7 @@ import Droppable from './Droppable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
+import Multibox from './components/multibox'
 
 
 const maxClickCount = 30;
@@ -22,7 +22,6 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const [randomIndex, setRandomIndex] = useState<number | null>(null);
-  const [decoysClicked, setDecoysClicked] = useState(new Set());
   const [parent, setParent] = useState(null);
 
   useEffect(() => {
@@ -43,11 +42,9 @@ function App() {
   }, [clickCount])
 
   const triggerConfetti = () => {
-    console.log("before confetti")
     var middleFinger = middleFingerRef.current;
     if (!middleFinger) return;
     middleFinger.classList.remove('hidden');
-    console.log("after confetti")
 
     const rect = middleFinger.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -75,10 +72,6 @@ function App() {
     const maxX = window.innerWidth - giftWidth;
     const maxY = window.innerHeight - giftHeight;
     let randomX, randomY;
-    console.log(`phraseRect.left: ${phraseRect.left}`);
-    console.log(`phraseRect.top: ${phraseRect.top}`);
-    console.log(`maxX: ${maxX}`);
-    console.log(`maxY: ${maxY}`);
     do {
       randomX = Math.random() * maxX;
       randomY = Math.random() * maxY;
@@ -95,26 +88,8 @@ function App() {
   }
 
   const handleClick = () => {
-    setDecoysClicked(new Set());
     setClickCount(prev => prev + 1);
   }
-
-  function getGiftSizeClass(boxCount: number) {
-    if (boxCount <= 4) return 'w-32 h-32';
-    if (boxCount <= 8) return 'w-24 h-24';
-    if (boxCount <= 12) return 'w-20 h-20';
-    if (boxCount <= 20) return 'w-16 h-16';
-    return 'w-12 h-12';
-  }
-
-  const handleDecoy = (index: number) => {
-    setDecoysClicked(prev => {
-      const newSet = new Set(prev);
-      newSet.add(index);
-      return newSet;
-    });
-  }
-
 
   function handleDragEnd({ over }: any) {
     if (over) {
@@ -151,18 +126,14 @@ function App() {
         case PhraseType.multibox:
           var phrase = phrases[clickCount] as MultiGiftPhrase;
           var boxcount = phrase.boxcount;
-          const sizeClass = getGiftSizeClass(boxcount);
           return (
-            <div className='flex space-between flex-wrap justify-center mt-16'>
-              {Array.from({ length: boxcount }, (_, index) => index).map((_, i) => (
-                <img
-                  key={`${clickCount}-${i}`}
-                  src={decoysClicked.has(i) ? chosePoorlyImage : giftImage}
-                  className={`animate-bounce transition-all scale-100 ${sizeClass}`}
-                  onClick={i === randomIndex ? handleClick : () => handleDecoy(i)}
-                />
-              ))}
-            </div>
+            <Multibox
+              boxCount={boxcount}
+              clickCount={clickCount}
+              randomIndex={randomIndex}
+              giftImage={giftImage}
+              handleClick={handleClick}
+            />
           );
         case PhraseType.lightsaber:
           return (
