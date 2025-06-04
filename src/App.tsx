@@ -69,9 +69,9 @@ function App() {
     const phraseRect = phrase.getBoundingClientRect();
     const giftWidth = gift.offsetWidth;
     const giftHeight = gift.offsetHeight;
-    const windowBounds = document.documentElement.getBoundingClientRect();
-    const maxX = windowBounds.width - giftWidth;
-    const maxY = windowBounds.height - giftHeight;
+    const buffer = 12;
+    const maxX = window.innerWidth - giftWidth - buffer;
+    const maxY = window.innerHeight - giftHeight - buffer;
     let randomX, randomY;
     do {
       randomX = Math.random() * maxX;
