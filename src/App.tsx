@@ -11,7 +11,7 @@ import Droppable from './Droppable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
-import Multibox from './components/multibox'
+import Multibox from './components/Multibox'
 
 
 const maxClickCount = 30;
@@ -69,14 +69,14 @@ function App() {
     const phraseRect = phrase.getBoundingClientRect();
     const giftWidth = gift.offsetWidth;
     const giftHeight = gift.offsetHeight;
-    const maxX = window.innerWidth - giftWidth;
-    const maxY = window.innerHeight - giftHeight;
+    const windowBounds = document.documentElement.getBoundingClientRect();
+    const maxX = windowBounds.width - giftWidth;
+    const maxY = windowBounds.height - giftHeight;
     let randomX, randomY;
     do {
       randomX = Math.random() * maxX;
       randomY = Math.random() * maxY;
     } while (
-      phrase &&
       randomX + giftWidth > phraseRect.left &&
       randomX < phraseRect.right &&
       randomY + giftHeight > phraseRect.top &&
@@ -119,7 +119,7 @@ function App() {
     }
   }
 
-  const renderContent = () => {
+  const renderGiftContent = () => {
     if (clickCount < maxClickCount) {
 
       switch (phrases[clickCount].type) {
@@ -158,7 +158,7 @@ function App() {
                 id="gift"
                 ref={giftRef} src={giftImage}
                 onClick={handleClick}
-                className={`animate-bounce invisble transition-all duration-300 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+                className={`animate-bounce invisble transition-all duration-200 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
             </div>
           );
       }
@@ -169,7 +169,7 @@ function App() {
     <div>
       {renderPhraseContent()}
       {renderMiddleFingerContent()}
-      {renderContent()}
+      {renderGiftContent()}
     </div>
   )
 }

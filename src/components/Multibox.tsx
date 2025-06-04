@@ -21,7 +21,7 @@ const Multibox: React.FC<MultiboxProps> = (props) => {
     const [decoysClicked, setDecoysClicked] = useState(new Set<number>());
 
     const sizeClass = getGiftSizeClass(props.boxCount);
-
+ 
     const handleDecoy = (index: number) => {
         setDecoysClicked(prev => {
             const newSet = new Set(prev);
