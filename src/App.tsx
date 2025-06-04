@@ -25,15 +25,18 @@ function App() {
   const [parent, setParent] = useState(null);
 
   useEffect(() => {
-    setRandomIndex(Math.floor(Math.random() * 4));
-
     if (clickCount < maxClickCount) {
-      moveGift();
-
       var currentPhrase = phrases[clickCount];
-      if (currentPhrase.type === PhraseType.multibox) {
-        const boxcount = (currentPhrase as MultiGiftPhrase).boxcount;
-        setRandomIndex(Math.floor(Math.random() * boxcount));
+      switch (currentPhrase.type) {
+        case PhraseType.multibox:
+          const boxcount = (currentPhrase as MultiGiftPhrase).boxcount;
+          setRandomIndex(Math.floor(Math.random() * boxcount));
+          break;
+        case PhraseType.lightsaber:
+          break;
+        default:
+          moveGift();
+          break;
       }
     }
     else {
@@ -62,30 +65,42 @@ function App() {
   }
 
   const moveGift = () => {
-    var gift = giftRef.current;
-    var phrase = phraseRef.current;
+    const gift = giftRef.current;
+    const phrase = phraseRef.current;
     if (!gift || !phrase) return;
 
+    const containerRect = gift.offsetParent?.getBoundingClientRect();
     const phraseRect = phrase.getBoundingClientRect();
+    if (!containerRect) return;
+
     const giftWidth = gift.offsetWidth;
     const giftHeight = gift.offsetHeight;
     const buffer = 12;
-    const maxX = window.innerWidth - giftWidth - buffer;
-    const maxY = window.innerHeight - giftHeight - buffer;
+    const mobilePadding = 40;
+
+    const maxX = containerRect.width - giftWidth - buffer;
+    const maxY = containerRect.height - giftHeight - buffer - mobilePadding;
+
     let randomX, randomY;
+    let attempts = 0;
+    const maxAttempts = 10;
+
     do {
       randomX = Math.random() * maxX;
       randomY = Math.random() * maxY;
+      attempts++;
     } while (
       randomX + giftWidth > phraseRect.left &&
       randomX < phraseRect.right &&
       randomY + giftHeight > phraseRect.top &&
-      randomY < phraseRect.bottom
+      randomY < phraseRect.bottom &&
+      attempts < maxAttempts
     );
-    gift.style.left = `${randomX}px`;
 
+    gift.style.left = `${randomX}px`;
     gift.style.top = `${randomY}px`;
-  }
+  };
+
 
   const handleClick = () => {
     setClickCount(prev => prev + 1);
