@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
 import Multibox from './components/Multibox'
+import useGiftMovement from './hooks/useGiftMovement'
 
 
 const maxClickCount = 30;
@@ -22,13 +23,13 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const [parent, setParent] = useState(null);
+  const moveGift = useGiftMovement(giftRef, phraseRef);
 
   useEffect(() => {
     if (clickCount < maxClickCount) {
       var currentPhrase = phrases[clickCount];
       switch (currentPhrase.type) {
         case PhraseType.multibox:
-          break;
         case PhraseType.lightsaber:
           break;
         default:
@@ -61,44 +62,6 @@ function App() {
 
   }
 
-  const moveGift = () => {
-    const gift = giftRef.current;
-    const phrase = phraseRef.current;
-    if (!gift || !phrase) return;
-
-    const containerRect = gift.offsetParent?.getBoundingClientRect();
-    const phraseRect = phrase.getBoundingClientRect();
-    if (!containerRect) return;
-
-    const giftWidth = gift.offsetWidth;
-    const giftHeight = gift.offsetHeight;
-    const buffer = 12;
-    const mobilePadding = 40;
-
-    const maxX = containerRect.width - giftWidth - buffer;
-    const maxY = containerRect.height - giftHeight - buffer - mobilePadding;
-
-    let randomX, randomY;
-    let attempts = 0;
-    const maxAttempts = 10;
-
-    do {
-      randomX = Math.random() * maxX;
-      randomY = Math.random() * maxY;
-      attempts++;
-    } while (
-      randomX + giftWidth > phraseRect.left &&
-      randomX < phraseRect.right &&
-      randomY + giftHeight > phraseRect.top &&
-      randomY < phraseRect.bottom &&
-      attempts < maxAttempts
-    );
-
-    gift.style.left = `${randomX}px`;
-    gift.style.top = `${randomY}px`;
-  };
-
-
   const handleClick = () => {
     setClickCount(prev => prev + 1);
   }
@@ -120,7 +83,7 @@ function App() {
     }
   }
 
-  const renderMiddleFingerContent = () => {
+  const renderLastStepContent = () => {
     if (clickCount == maxClickCount) {
       return (
         <div ref={middleFingerRef} className='flex flex-col items-center'>
@@ -179,7 +142,7 @@ function App() {
   return (
     <div>
       {renderPhraseContent()}
-      {renderMiddleFingerContent()}
+      {renderLastStepContent()}
       {renderGiftContent()}
     </div>
   )
