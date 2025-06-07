@@ -3,10 +3,11 @@ import giftImage from './assets/present.png'
 import middleFingerImage from './assets/colbert_middle.gif'
 import './App.css'
 import confetti from 'canvas-confetti'
-import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
+import { PhraseType, type MultiGiftPhrase } from './types/Phrase'
 import Multibox from './components/Multibox'
 import useRandomGiftMovement from './hooks/useGiftMovement'
 import LightSaberDrag from './components/LightSaberDrag'
+import useShuffledPhrases from './hooks/usePhrases'
 
 const maxClickCount = 30;
 
@@ -16,6 +17,7 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const moveGift = useRandomGiftMovement(giftRef, phraseRef);
+  const phrases = useShuffledPhrases();
 
   useEffect(() => {
     if (clickCount < maxClickCount) {

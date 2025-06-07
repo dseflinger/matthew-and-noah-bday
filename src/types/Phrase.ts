@@ -14,11 +14,16 @@ export interface MultiGiftPhrase extends BasePhrase {
     type: PhraseType.multibox;
 }
 
-type Phrase = BasePhrase | MultiGiftPhrase;
+export type Phrase = BasePhrase | MultiGiftPhrase;
 
+export const introPhrase: Phrase = { text: "Open your gift for a special suprise!" };
 
-export const phrases: Phrase[] = [
-    { text: "Open your gift for a special suprise!" },
+export const multiboxPhrases = [
+    { text: "WHICH ONE IS IT??? CHOOSE WISELY", type: PhraseType.multibox, boxcount: 4 },
+    { text: "HOW ABOUT NOW???", type: PhraseType.multibox, boxcount: 20 },
+]
+
+export const otherPhrases: Phrase[] = [
     { text: "Definitely not best man material" },
     { text: "Bottom of leaderboard" },
     { text: "Peaked in High School" },
@@ -30,8 +35,6 @@ export const phrases: Phrase[] = [
     { text: "Open it and reveal your final form (disappointment)" },
     { text: "Noah raw-dogs ketchup packets" },
     { text: "Matthew eats a bowl of Cheetos with cheese" },
-    { text: "WHICH ONE IS IT??? CHOOSE WISELY", type: PhraseType.multibox, boxcount: 4 },
-    { text: "HOW ABOUT NOW???", type: PhraseType.multibox, boxcount: 20 },
     { text: "Why?" },
     { text: "Disney adults" },
     { text: "They mark Hispanic on on forms but immediately ask where the mayo is" },
