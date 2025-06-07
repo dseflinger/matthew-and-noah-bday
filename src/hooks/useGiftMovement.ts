@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-const useGiftMovement = (giftRef: React.RefObject<HTMLImageElement | null>, phraseRef: React.RefObject<HTMLDivElement | null>) => {
+const useRandomGiftMovement = (giftRef: React.RefObject<HTMLImageElement | null>, phraseRef: React.RefObject<HTMLDivElement | null>) => {
     return useCallback(() => {
         const gift = giftRef?.current;
         const phrase = phraseRef?.current;
@@ -36,4 +36,4 @@ const useGiftMovement = (giftRef: React.RefObject<HTMLImageElement | null>, phra
         gift.style.top = `${randomY}px`;
     }, [giftRef, phraseRef]);
 }
-export default useGiftMovement;
+export default useRandomGiftMovement;

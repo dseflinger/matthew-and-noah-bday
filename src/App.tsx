@@ -1,19 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import giftImage from './assets/present.png'
 import middleFingerImage from './assets/colbert_middle.gif'
-import younglingImage from './assets/youngling.webp'
-import lightsaberImage from './assets/lightsaber.png'
 import './App.css'
 import confetti from 'canvas-confetti'
-import { DndContext } from '@dnd-kit/core'
-import Draggable from './components/Draggable'
-import Droppable from './components/Droppable'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
 import Multibox from './components/Multibox'
-import useGiftMovement from './hooks/useGiftMovement'
-
+import useRandomGiftMovement from './hooks/useGiftMovement'
+import LightSaberDrag from './components/LightSaberDrag'
 
 const maxClickCount = 30;
 
@@ -22,8 +15,7 @@ function App() {
   const giftRef = useRef<HTMLImageElement>(null)
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
-  const [parent, setParent] = useState(null);
-  const moveGift = useGiftMovement(giftRef, phraseRef);
+  const moveGift = useRandomGiftMovement(giftRef, phraseRef);
 
   useEffect(() => {
     if (clickCount < maxClickCount) {
@@ -66,13 +58,6 @@ function App() {
     setClickCount(prev => prev + 1);
   }
 
-  function handleDragEnd({ over }: any) {
-    if (over) {
-      setParent(over.id);
-      handleClick();
-    }
-  }
-
   const renderPhraseContent = () => {
     if (clickCount < maxClickCount) {
       return (
@@ -111,19 +96,7 @@ function App() {
           );
         case PhraseType.lightsaber:
           return (
-            <DndContext onDragEnd={handleDragEnd}>
-              <div className='flex space-between flex-col gap-8 justify-center items-center mt-16'>
-                {!parent ? (
-                  <Draggable id="draggable-item">
-                    <img src={lightsaberImage} alt="Lightsaber" className="w-48" />
-                  </Draggable>
-                ) : null}
-                <FontAwesomeIcon icon={faArrowDown} size="2x" />
-                <Droppable id="drop-zone">
-                  <img src={younglingImage} alt="Youngling" className="w-64" />
-                </Droppable>
-              </div>
-            </DndContext>
+            <LightSaberDrag handleClick={handleClick} />
           );
         default:
           return (
