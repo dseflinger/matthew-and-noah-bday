@@ -6,17 +6,15 @@ const useGiftMovement = (giftRef: React.RefObject<HTMLImageElement | null>, phra
         const phrase = phraseRef?.current;
         if (!gift || !phrase) return;
 
-        const containerRect = gift.offsetParent?.getBoundingClientRect();
         const phraseRect = phrase.getBoundingClientRect();
-        if (!containerRect) return;
 
         const giftWidth = gift.offsetWidth;
         const giftHeight = gift.offsetHeight;
         const buffer = 12;
         const mobilePadding = 40;
 
-        const maxX = containerRect.width - giftWidth - buffer;
-        const maxY = containerRect.height - giftHeight - buffer - mobilePadding;
+        const maxX = window.innerWidth - giftWidth - buffer;
+        const maxY = window.innerHeight - giftHeight - buffer - mobilePadding;
 
         let randomX, randomY;
         let attempts = 0;
