@@ -6,8 +6,8 @@ import lightsaberImage from './assets/lightsaber.png'
 import './App.css'
 import confetti from 'canvas-confetti'
 import { DndContext } from '@dnd-kit/core'
-import Draggable from './Draggable'
-import Droppable from './Droppable'
+import Draggable from './components/Draggable'
+import Droppable from './components/Droppable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { phrases, PhraseType, type MultiGiftPhrase } from './types/Phrase'
@@ -21,7 +21,6 @@ function App() {
   const giftRef = useRef<HTMLImageElement>(null)
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
-  const [randomIndex, setRandomIndex] = useState<number | null>(null);
   const [parent, setParent] = useState(null);
 
   useEffect(() => {
@@ -29,8 +28,6 @@ function App() {
       var currentPhrase = phrases[clickCount];
       switch (currentPhrase.type) {
         case PhraseType.multibox:
-          const boxcount = (currentPhrase as MultiGiftPhrase).boxcount;
-          setRandomIndex(Math.floor(Math.random() * boxcount));
           break;
         case PhraseType.lightsaber:
           break;
@@ -145,7 +142,6 @@ function App() {
             <Multibox
               boxCount={boxcount}
               clickCount={clickCount}
-              randomIndex={randomIndex}
               giftImage={giftImage}
               handleClick={handleClick}
             />

@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import chosePoorlyImage from '../assets/youchosepoorly.jpg'
 
 interface MultiboxProps {
     boxCount: number;
     clickCount: number;
-    randomIndex: number | null;
     giftImage: string;
     handleClick: () => void;
 }
@@ -19,9 +18,14 @@ const getGiftSizeClass = (boxCount: number) => {
 
 const Multibox: React.FC<MultiboxProps> = (props) => {
     const [decoysClicked, setDecoysClicked] = useState(new Set<number>());
+    const [realBoxIndex, setRealBoxIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        setRealBoxIndex(Math.floor(Math.random() * props.boxCount));
+    }, [props.boxCount, props.clickCount])
 
     const sizeClass = getGiftSizeClass(props.boxCount);
- 
+
     const handleDecoy = (index: number) => {
         setDecoysClicked(prev => {
             const newSet = new Set(prev);
@@ -42,7 +46,7 @@ const Multibox: React.FC<MultiboxProps> = (props) => {
                     key={`${props.clickCount}-${i}`}
                     src={decoysClicked.has(i) ? chosePoorlyImage : props.giftImage}
                     className={`animate-bounce transition-all scale-100 ${sizeClass}`}
-                    onClick={i === props.randomIndex ? handleGiftClick : () => handleDecoy(i)}
+                    onClick={i === realBoxIndex ? handleGiftClick : () => handleDecoy(i)}
                 />
             ))}
         </div>
