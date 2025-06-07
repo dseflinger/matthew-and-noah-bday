@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { introPhrase, multiboxPhrases, otherPhrases, type Phrase } from "../types/Phrase";
+import { introPhrase, multiboxPhrases, otherPhrases } from "../types/Phrase";
 
 const useShuffledPhrases = () => {
 
