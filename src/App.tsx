@@ -132,19 +132,20 @@ function App() {
                 id="gift"
                 ref={giftRef} src={giftImage}
                 onClick={handleClick}
-                className={`animate-bounce invisble transition-all duration-200 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+                className={`animate-bounce transition-all duration-200 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'absolute'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
             </div>
           );
       }
     }
   };
-
   return (
-    <div>
-      {renderPhraseContent()}
-      {renderLastStepContent()}
+    <>
+      <div>
+        {renderPhraseContent()}
+        {renderLastStepContent()}
+      </div>
       {renderGiftContent()}
-    </div>
+    </>
   )
 }
 
