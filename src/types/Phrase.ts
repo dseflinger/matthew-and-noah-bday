@@ -6,7 +6,8 @@ export enum PhraseType {
 
 export interface BasePhrase {
     text: string;
-    type?: PhraseType;
+    type: PhraseType;
+    isSmall: boolean;
 }
 
 export interface MultiGiftPhrase extends BasePhrase {
@@ -16,40 +17,48 @@ export interface MultiGiftPhrase extends BasePhrase {
 
 export type Phrase = BasePhrase | MultiGiftPhrase;
 
-export const introPhrase: Phrase = { text: "Open your gift for a special suprise!" };
+const createPhrase = (text: string, type: PhraseType = PhraseType.default, isSmall = false): BasePhrase => {
+    return { text, type, isSmall };
+}
+
+const createMultiPhrase = (text: string, boxcount: number): MultiGiftPhrase => {
+    return { text, type: PhraseType.multibox, boxcount, isSmall: false };
+}
+
+export const introPhrase: Phrase = createPhrase("Open your gift for a special suprise!");
 
 export const multiboxPhrases = [
-    { text: "WHICH ONE IS IT??? CHOOSE WISELY", type: PhraseType.multibox, boxcount: 4 },
-    { text: "HOW ABOUT NOW???", type: PhraseType.multibox, boxcount: 20 },
+    createMultiPhrase("WHICH ONE IS IT??? CHOOSE WISELY", 4),
+    createMultiPhrase("HOW ABOUT NOW???", 20),
 ]
 
 export const otherPhrases: Phrase[] = [
-    { text: "Definitely not best man material" },
-    { text: "Bottom of leaderboard" },
-    { text: "Peaked in High School" },
-    { text: "One twin is definitely uglier" },
-    { text: "Your mom definitely has a favorite" },
-    { text: "Its a little birthday present, get it?" },
-    { text: "What happened?" },
-    { text: "Midlife crisis starts in 3… 2…" },
-    { text: "Open it and reveal your final form (disappointment)" },
-    { text: "Noah raw-dogs ketchup packets" },
-    { text: "Matthew eats a bowl of Cheetos with cheese" },
-    { text: "Why?" },
-    { text: "Disney adults" },
-    { text: "They mark Hispanic on on forms but immediately ask where the mayo is" },
-    { text: "You're closer to 40 now than to 20" },
-    { text: "They were supposed to be triplets, but one clearly ate the third" },
-    { text: "one more just to test" },
-    { text: "KILL THE YOUNGLING. DO IT. DO IT NOW.", type: PhraseType.lightsaber },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
-    { text: "TODO" },
+    createPhrase("Definitely not best man material"),
+    createPhrase("Bottom of leaderboard"),
+    createPhrase("Peaked in High School"),
+    createPhrase("One twin is definitely uglier"),
+    createPhrase("Your mom definitely has a favorite"),
+    createPhrase("Its a little birthday present, get it?", PhraseType.default, true), // todo add a type to this to make it work at any step
+    createPhrase("What happened?"),
+    createPhrase("Midlife crisis starts in 3… 2…"),
+    createPhrase("Open it and reveal your final form (disappointment)"),
+    createPhrase("Noah raw-dogs ketchup packets"),
+    createPhrase("Matthew eats a bowl of Cheetos with cheese"),
+    createPhrase("Why?"),
+    createPhrase("Disney adults"),
+    createPhrase("They mark Hispanic on on forms but immediately ask where the mayo is"),
+    createPhrase("You're closer to 40 now than to 20"),
+    createPhrase("They were supposed to be triplets, but one clearly ate the third"),
+    createPhrase("one more just to test"),
+    createPhrase("KILL THE YOUNGLING. DO IT. DO IT NOW.", PhraseType.lightsaber),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
+    createPhrase("TODO"),
 ]

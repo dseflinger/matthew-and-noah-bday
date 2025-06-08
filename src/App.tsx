@@ -22,13 +22,8 @@ function App() {
   useEffect(() => {
     if (clickCount < maxClickCount) {
       var currentPhrase = phrases[clickCount];
-      switch (currentPhrase.type) {
-        case PhraseType.multibox:
-        case PhraseType.lightsaber:
-          break;
-        default:
-          moveGift();
-          break;
+      if (currentPhrase.type == PhraseType.default) {
+        moveGift();
       }
     }
     else {
@@ -102,12 +97,12 @@ function App() {
           );
         default:
           return (
-            <div className={`flex space-between flex-wrap justify-center ${clickCount == 0 || clickCount == 6 ? 'mt-16' : ''}`} >
+            <div className={`flex space-between flex-wrap justify-center mt-16`} >
               <img
                 id="gift"
                 ref={giftRef} src={giftImage}
                 onClick={handleClick}
-                className={`animate-bounce transition-all duration-200 ease-in-out scale-100 ${clickCount == 0 || clickCount == 6 ? '' : 'fixed'} ${clickCount === 6 ? 'w-8 h-8' : 'w-32 h-32'}`} />
+                className={`animate-bounce transition-all duration-200 ease-in-out scale-100 ${clickCount == 0 || phrases[clickCount].isSmall ? '' : 'fixed'} ${phrases[clickCount].isSmall ? 'w-8 h-8' : 'w-32 h-32'}`} />
             </div>
           );
       }
