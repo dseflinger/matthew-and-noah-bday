@@ -38,7 +38,7 @@ export const otherPhrases: Phrase[] = [
     createPhrase("Peaked in High School"),
     createPhrase("One twin is definitely uglier"),
     createPhrase("Your mom definitely has a favorite"),
-    createPhrase("Its a little birthday present, get it?", PhraseType.default, true), // todo add a type to this to make it work at any step
+    createPhrase("Its a little birthday present, get it?", PhraseType.default, true),
     createPhrase("What happened?"),
     createPhrase("Midlife crisis starts in 3… 2…"),
     createPhrase("Open it and reveal your final form (disappointment)"),
