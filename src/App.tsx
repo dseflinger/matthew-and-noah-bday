@@ -21,7 +21,7 @@ function App() {
 
   useEffect(() => {
     if (clickCount < maxClickCount) {
-      var currentPhrase = phrases[clickCount];
+      const currentPhrase = phrases[clickCount];
       if (currentPhrase.type == PhraseType.default) {
         moveGift();
       }
@@ -29,10 +29,10 @@ function App() {
     else {
       triggerConfetti();
     }
-  }, [clickCount])
+  }, [clickCount, moveGift, phrases])
 
   const triggerConfetti = () => {
-    var middleFinger = middleFingerRef.current;
+    const middleFinger = middleFingerRef.current;
     if (!middleFinger) return;
     middleFinger.classList.remove('hidden');
 
@@ -55,6 +55,10 @@ function App() {
     setClickCount(prev => prev + 1);
   }
 
+  const handleReset = () => {
+    setClickCount(0);
+  }
+
   const renderPhraseContent = () => {
     if (clickCount < maxClickCount) {
       return (
@@ -71,6 +75,7 @@ function App() {
         <div ref={middleFingerRef} className='flex flex-col items-center'>
           <span className='text-2xl md:text-3xl lg:text-4xl font-bold mb-8'>Happy 30th Birthday Fuckers!</span>
           <img id="middle-finger" src={middleFingerImage} className='w-64' />
+          <button onClick={handleReset}>Reset</button>
         </div>
       );
     }
@@ -80,9 +85,9 @@ function App() {
     if (clickCount < maxClickCount) {
 
       switch (phrases[clickCount].type) {
-        case PhraseType.multibox:
-          var phrase = phrases[clickCount] as MultiGiftPhrase;
-          var boxcount = phrase.boxcount;
+        case PhraseType.multibox: {
+          const phrase = phrases[clickCount] as MultiGiftPhrase;
+          const boxcount = phrase.boxcount;
           return (
             <Multibox
               boxCount={boxcount}
@@ -91,6 +96,7 @@ function App() {
               handleClick={handleClick}
             />
           );
+        }
         case PhraseType.lightsaber:
           return (
             <LightSaberDrag handleClick={handleClick} />

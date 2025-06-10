@@ -1,4 +1,4 @@
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, type UniqueIdentifier, type DragEndEvent } from '@dnd-kit/core';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
@@ -12,10 +12,11 @@ interface LightSaberProps {
 }
 
 const LightSaberDrag: React.FC<LightSaberProps> = (props) => {
-    const [parent, setParent] = useState(null);
+    const [parent, setParent] = useState<UniqueIdentifier>("");
 
 
-    function handleDragEnd({ over }: any) {
+    function handleDragEnd(event: DragEndEvent) {
+        const { over } = event;
         if (over) {
             setParent(over.id);
             props.handleClick();
