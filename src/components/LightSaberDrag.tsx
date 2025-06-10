@@ -14,7 +14,6 @@ interface LightSaberProps {
 const LightSaberDrag: React.FC<LightSaberProps> = (props) => {
     const [parent, setParent] = useState<UniqueIdentifier>("");
 
-
     function handleDragEnd(event: DragEndEvent) {
         const { over } = event;
         if (over) {
