@@ -77,7 +77,7 @@ function App() {
         <div ref={middleFingerRef} className='flex flex-col items-center'>
           <span className='text-2xl md:text-3xl lg:text-4xl font-bold mb-8'>Happy 30th Birthday Fuckers!</span>
           <img id="middle-finger" src={middleFingerImage} className='w-64' />
-          <button onClick={handleReset}>Reset</button>
+          <button className="cursor-pointer mt-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={handleReset}>Reset</button>
         </div>
       );
     }
