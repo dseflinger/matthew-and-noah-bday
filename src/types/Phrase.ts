@@ -51,7 +51,7 @@ export const otherPhrases: Phrase[] = [
     createPhrase("They mark Hispanic on on forms but immediately ask where the mayo is"),
     createPhrase("You're closer to 40 now than to 20"),
     createPhrase("They were supposed to be triplets, but one clearly ate the third"),
-    createPhrase("one more just to test"),
+    createPhrase("Poke Ball neck"),
     createPhrase("KILL THE YOUNGLING. DO IT. DO IT NOW.", PhraseType.lightsaber),
     createPhrase("Take hair away from Matt.", PhraseType.MattSad),
     createPhrase("Throw Noah in the pool. Don't drop him!", PhraseType.NoahPool),
