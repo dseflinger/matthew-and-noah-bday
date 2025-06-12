@@ -8,6 +8,8 @@ import Multibox from './components/Multibox'
 import useRandomGiftMovement from './hooks/useGiftMovement'
 import LightSaberDrag from './components/LightSaberDrag'
 import useShuffledPhrases from './hooks/usePhrases'
+import MattHairAwayDrag from './components/MattHairAway'
+import ThrowNoahInPool from './components/ThrowNoahInPool'
 
 const maxClickCount = 30;
 
@@ -100,6 +102,14 @@ function App() {
         case PhraseType.lightsaber:
           return (
             <LightSaberDrag handleClick={handleClick} />
+          );
+        case PhraseType.MattSad:
+          return (
+            <MattHairAwayDrag handleClick={handleClick} />
+          );
+        case PhraseType.NoahPool:
+          return (
+            <ThrowNoahInPool handleClick={handleClick} />
           );
         default:
           return (

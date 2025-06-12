@@ -1,7 +1,9 @@
 export enum PhraseType {
     default,
     multibox,
-    lightsaber
+    lightsaber,
+    MattSad,
+    NoahPool
 }
 
 export interface BasePhrase {
@@ -51,14 +53,14 @@ export const otherPhrases: Phrase[] = [
     createPhrase("They were supposed to be triplets, but one clearly ate the third"),
     createPhrase("one more just to test"),
     createPhrase("KILL THE YOUNGLING. DO IT. DO IT NOW.", PhraseType.lightsaber),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
-    createPhrase("TODO"),
+    createPhrase("Take hair away from Matt.", PhraseType.MattSad),
+    createPhrase("Throw Noah in the pool. Don't drop him!", PhraseType.NoahPool),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
+    // createPhrase("TODO"),
 ]
