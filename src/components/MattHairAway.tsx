@@ -40,11 +40,11 @@ const MattHairAwayDrag: React.FC<LightSaberProps> = (props) => {
                     <img
                         src={mattImage}
                         alt="Matt"
-                        className="w-48 mt-2"
+                        className="w-48"
 
                     />
 
-                    <div className="absolute top-0 left-12">
+                    <div className="absolute -top-2 left-12">
                         {!parent && (
                             <Draggable id="hair">
                                 <div className="w-24 relative">
