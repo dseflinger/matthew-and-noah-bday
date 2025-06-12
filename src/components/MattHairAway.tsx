@@ -40,7 +40,7 @@ const MattHairAwayDrag: React.FC<LightSaberProps> = (props) => {
                     <img
                         src={mattImage}
                         alt="Matt"
-                        className="w-full h-auto mt-2"
+                        className="w-48 mt-2"
 
                     />
 
