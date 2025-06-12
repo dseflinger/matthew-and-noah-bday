@@ -36,18 +36,17 @@ const MattHairAwayDrag: React.FC<LightSaberProps> = (props) => {
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
             <div className="flex flex-col gap-8 justify-center items-center mt-16">
-                <div className="relative w-48" ref={mattRef}>
+                <div className="relative w-36" ref={mattRef}>
                     <img
                         src={mattImage}
                         alt="Matt"
-                        className="w-48"
+                        className="w-36"
 
                     />
                     {!parent && (
-                        <div className="absolute -top-2 left-12">
-
+                        <div className="absolute -top-2 left-8">
                             <Draggable id="hair">
-                                <div className="w-24 relative">
+                                <div className="w-20 relative">
                                     <img
                                         src={hairImage}
                                         alt="Hair"
@@ -56,14 +55,13 @@ const MattHairAwayDrag: React.FC<LightSaberProps> = (props) => {
                                 </div>
                             </Draggable>
                         </div>
-
                     )}
 
                 </div>
 
                 <FontAwesomeIcon icon={faArrowDown} size="2x" />
                 <Droppable id="drop-zone">
-                    <img src={trashCanImage} alt="Trash Can" className="w-36" />
+                    <img src={trashCanImage} alt="Trash Can" className="w-24" />
                 </Droppable>
             </div>
         </DndContext>
