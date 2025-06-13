@@ -4,6 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/matthew-and-noah-bday/',
+  base: '/',
   plugins: [react(), tailwindcss()],
 })
