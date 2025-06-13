@@ -19,7 +19,7 @@ function App() {
   const middleFingerRef = useRef<HTMLImageElement>(null)
   const [clickCount, setClickCount] = useState(0)
   const moveGift = useRandomGiftMovement(giftRef, phraseRef);
-  const phrases = useShuffledPhrases();
+  const { phrases, reshuffle } = useShuffledPhrases();
 
   useEffect(() => {
     if (clickCount < maxClickCount) {
@@ -59,6 +59,7 @@ function App() {
 
   const handleReset = () => {
     setClickCount(0);
+    reshuffle();
   }
 
   const renderPhraseContent = () => {
