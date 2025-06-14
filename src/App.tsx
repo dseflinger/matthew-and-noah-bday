@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import giftImage from './assets/present.png'
-import middleFingerImage from './assets/colbert_middle.gif'
 import './App.css'
 import confetti from 'canvas-confetti'
 import { PhraseType, type MultiGiftPhrase } from './types/Phrase'
@@ -10,8 +9,8 @@ import LightSaberDrag from './components/LightSaberDrag'
 import useShuffledPhrases from './hooks/usePhrases'
 import MattHairAwayDrag from './components/MattHairAway'
 import ThrowNoahInPool from './components/ThrowNoahInPool'
+import useRandomFinalImage from './hooks/useRandomFinalImage'
 
-const maxClickCount = 30;
 
 function App() {
   const phraseRef = useRef<HTMLDivElement>(null)
@@ -20,6 +19,8 @@ function App() {
   const [clickCount, setClickCount] = useState(0)
   const moveGift = useRandomGiftMovement(giftRef, phraseRef);
   const { phrases, reshuffle } = useShuffledPhrases();
+  const { middleFingerImage, setMiddleFingerImage } = useRandomFinalImage();
+  const maxClickCount = phrases.length - 1;
 
   useEffect(() => {
     if (clickCount < maxClickCount) {
@@ -31,7 +32,7 @@ function App() {
     else {
       triggerConfetti();
     }
-  }, [clickCount, moveGift, phrases])
+  }, [clickCount, moveGift, phrases, maxClickCount])
 
   const triggerConfetti = () => {
     const middleFinger = middleFingerRef.current;
@@ -60,6 +61,7 @@ function App() {
   const handleReset = () => {
     setClickCount(0);
     reshuffle();
+    setMiddleFingerImage();
   }
 
   const renderPhraseContent = () => {
@@ -119,7 +121,7 @@ function App() {
                 id="gift"
                 ref={giftRef} src={giftImage}
                 onClick={handleClick}
-                className={`animate-bounce transition-all duration-200 ease-in-out scale-100 ${clickCount == 0 || phrases[clickCount].isSmall ? '' : 'fixed'} ${phrases[clickCount].isSmall ? 'w-8 h-8' : 'w-32 h-32'}`} />
+                className={`animate-bounce transition-all duration-200 ease-in-out scale-100 cursor-pointer ${clickCount == 0 || phrases[clickCount].isSmall ? '' : 'fixed'} ${phrases[clickCount].isSmall ? 'w-8 h-8' : 'w-32 h-32'}`} />
             </div>
           );
       }

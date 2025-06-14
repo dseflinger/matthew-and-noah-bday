@@ -45,7 +45,7 @@ const Multibox: React.FC<MultiboxProps> = (props) => {
                 <img
                     key={`${props.clickCount}-${i}`}
                     src={decoysClicked.has(i) ? chosePoorlyImage : props.giftImage}
-                    className={`animate-bounce transition-all scale-100 ${sizeClass}`}
+                    className={`animate-bounce transition-all scale-100 cursor-pointer ${sizeClass}`}
                     onClick={i === realBoxIndex ? handleGiftClick : () => handleDecoy(i)}
                 />
             ))}
