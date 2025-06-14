@@ -46,7 +46,7 @@ export const otherPhrases: Phrase[] = [
     createPhrase("Open it and reveal your final form (disappointment)"),
     createPhrase("Noah raw-dogs ketchup packets"),
     createPhrase("Matthew eats a bowl of Cheetos with cheese"),
-    createPhrase("Why?"),
+    createPhrase("I was nice before I met you two"),
     createPhrase("Disney adults"),
     createPhrase("They mark Hispanic on forms but immediately ask where the mayo is"),
     createPhrase("You're closer to 40 now than to 20"),
